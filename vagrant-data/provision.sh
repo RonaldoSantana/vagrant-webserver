@@ -11,7 +11,8 @@ then
 	apt-get -y install mysql-client mysql-server
 	
 	# Install PostgreSQL
-	apt-get install postgresql-9.1 libpq-dev
+	apt-get -y install postgresql libpq-dev
+	apt-get -y install postgresql-client-common
 
 	# Install Apache2
 	apt-get -y install apache2
@@ -46,6 +47,9 @@ then
 
 	# Enable PECL HTTP
 	echo "extension=http.so" > /etc/php5/conf.d/http.ini
+
+    # set server name
+	echo "ServerName webserver.domain.com" > /etc/apache2/httpd.conf
 
 	# Enable mod_rewrite	
 	a2enmod rewrite
@@ -108,8 +112,14 @@ provision() {
     # Hosts file
     rm /etc/hosts
     ensureSymlink /vagrant/vagrant-data/hosts /etc/hosts
-    # set server name
-	echo "ServerName webserver.domain.com" > /etc/apache2/httpd.conf
+	
+	#mysql extra configuration
+	sudo -s
+	mysql -u root -pvipper -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '' WITH GRANT OPTION; FLUSH PRIVILEGES;"
+	
+	#extra php settings
+	rm /etc/php5/apache2/php.ini
+	ensureSymlink /vagrant/vagrant-data/conf/php.ini /etc/php5/apache2/php.ini
 
     # MySQL custom settings
     # ensureFilePresentMd5 /vagrant/vagrant-data/mysql/custom.cnf /etc/mysql/conf.d/custom.cnf "custom MySQL settings"
