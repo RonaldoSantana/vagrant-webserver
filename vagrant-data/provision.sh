@@ -21,8 +21,8 @@ then
 	rm -rf /var/www
 	ln -fs /vagrant/www /var/www
 
-	# Install PHP5 support
-	apt-get -y install php5 libapache2-mod-php5 php-apc php5-mysql php5-dev
+	# Install PHP5 support - including mysql and postgresql
+	apt-get -y install php5 libapache2-mod-php5 php-apc php5-mysql php5-dev php5-mcrypt php5-pgsql
 
 	# Install SSL tools
 	#apt-get -y install ssl-cert
@@ -41,6 +41,11 @@ then
 
 	# Install Perl
 	apt-get -y install perl
+
+	#python
+	sudo apt-get -y install python-setuptools
+	sudo easy_install http://cheeseshop.python.org/packages/source/p/pyparsing/pyparsing-1.5.5.tar.gz
+	sudo easy_install markdown
 
 	# Install PECL HTTP (depends on php-pear, php5-dev, libcurl4-openssl-dev)
 	printf "\n" | pecl install pecl_http
@@ -119,7 +124,11 @@ provision() {
 	
 	#extra php settings
 	rm /etc/php5/apache2/php.ini
+	sudo rm /etc/php5/cli/php.ini
+	# cp /vagrant/vagrant-data/conf/php.ini /etc/php5/apache2/php.ini
+	# cp /vagrant/vagrant-data/conf/php.ini /etc/php5/cli/php.ini
 	ensureSymlink /vagrant/vagrant-data/conf/php.ini /etc/php5/apache2/php.ini
+	ensureSymlink /vagrant/vagrant-data/conf/php.ini /etc/php5/cli/php.ini
 
     # MySQL custom settings
     # ensureFilePresentMd5 /vagrant/vagrant-data/mysql/custom.cnf /etc/mysql/conf.d/custom.cnf "custom MySQL settings"

@@ -1,5 +1,4 @@
 # Add to /etc/hosts on your host system
-
 ##
 # # Projects
 # 192.168.33.10   projects-box
@@ -29,7 +28,7 @@ Vagrant::Config.run do |config|
 
   # Host name
   config.vm.host_name = "projects-box"
-  
+
 
   # Assign this VM to a host-only network IP, allowing you to access it
   # via the IP. Host-only networks can talk to the host machine as well as
@@ -48,7 +47,7 @@ Vagrant::Config.run do |config|
   config.vm.forward_port 5432, 5432 #postgres
 
   # Customization
-  config.vm.customize ["modifyvm", :id, "--memory", 1024] # 1 GB RAM
+  config.vm.customize ["modifyvm", :id, "--memory", 2048] # 1 GB RAM
   config.vm.customize ["modifyvm", :id, "--chipset", "ich9"] # Modern ICH9 chipset
   config.vm.customize ["modifyvm", :id, "--name", "webserver"] # VM name
 
@@ -56,7 +55,8 @@ Vagrant::Config.run do |config|
   # an identifier, the second is the path on the guest to mount the
   # folder, and the third is the path on the host to the actual folder.
   # config.vm.share_folder "v-data", "/vagrant_data", "../data"
-  # config.vm.share_folder("v-root", "/vagrant", ".", :nfs => true)
+  # setting to nfs is the easiest way to grant write permission, etc - but will require host password
+  config.vm.share_folder("v-root", "/vagrant", ".", :nfs => true)
 
   # Enable shell provisioning
   config.vm.provision :shell, :path => "vagrant-data/provision.sh"  
