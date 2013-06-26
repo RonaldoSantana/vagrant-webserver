@@ -47,6 +47,16 @@ then
 	sudo easy_install http://cheeseshop.python.org/packages/source/p/pyparsing/pyparsing-1.5.5.tar.gz
 	sudo easy_install markdown
 
+	#curl
+	sudo apt-get install curl
+
+	#composer
+	curl -sS https://getcomposer.org/installer | php
+	#make composer executable and accessible by just typing composer
+	sudo mkdir /usr/local/bin/composer
+	sudo mv composer.phar /usr/local/bin/composer
+
+
 	# Install PECL HTTP (depends on php-pear, php5-dev, libcurl4-openssl-dev)
 	printf "\n" | pecl install pecl_http
 
