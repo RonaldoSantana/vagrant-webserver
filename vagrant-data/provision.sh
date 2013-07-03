@@ -58,13 +58,14 @@ then
 
 
 	# Install PECL HTTP (depends on php-pear, php5-dev, libcurl4-openssl-dev)
-	printf "\n" | pecl install pecl_http
+	sudo apt-get -y install make
+	sudo pecl install pecl_http
 
 	# Enable PECL HTTP
 	echo "extension=http.so" > /etc/php5/conf.d/http.ini
 
     # set server name
-	echo "ServerName webserver.domain.com" > /etc/apache2/httpd.conf
+	echo "ServerName server.local" > /etc/apache2/httpd.conf
 
 	# Enable mod_rewrite	
 	a2enmod rewrite
@@ -76,17 +77,42 @@ then
 	usermod -a -G vagrant www-data
 	
 	# Restart services
-	# /etc/init.d/apache2 restart
+	# /etc/init.d/apache2 restart	
 	
 	# ZSH
-	apt-get -y install zsh
-
+	sudo apt-get -y install zsh
+	
+	# git
+	sudo apt-get -y install git
+	
 	# Vim
 	apt-get -y install vim
 	
 	# Clean up apt-get packages
 	apt-get -y clean
 fi
+
+# fixes pear problem
+sudo mv /usr/share/php/.channels /usr/share/php/.channels.bak
+pear update-channels
+
+# composer
+sudo rm -rf /usr/local/bin/composer
+curl -sS https://getcomposer.org/installer | php
+sudo mv composer.phar /usr/local/bin/composer
+
+
+#changes resolv.conf
+sudo sed -i "s/10\.0\.2\.3/8\.8\.8\.8/g" /etc/resolv.conf
+
+#Needs to run to access postgresql from navicat
+echo "# Needs to run to access postgresql from navicat"
+echo "# sudo -u postgres psql template1"
+echo "# ALTER USER postgres with encrypted password 'vipper'";
+echo "# \q"
+echo "# sudo sed -i 's/peer/md5/g' /etc/postgresql/9.1/main/pg_hba.conf"
+echo "# sudo /etc/init.d/postgresql-8.4 restart"
+
 
 # Ensures if the specified file is present and the md5 checksum is equal
 ensureFilePresentMd5 () {
@@ -151,7 +177,7 @@ provision() {
     ensureSymlink /vagrant/vagrant-data/vhosts/global.conf /etc/apache2/sites-enabled/global.conf
 	ensureSymlink /vagrant/vagrant-data/vhosts/modica.conf /etc/apache2/sites-enabled/modica.conf
 	ensureSymlink /vagrant/vagrant-data/vhosts/digital.conf /etc/apache2/sites-enabled/digital.conf
-	ensureSymlink /vagrant/vagrant-data/vhosts/myeasyweb.conf /etc/apache2/sites-enabled/myeasywebß.conf
+	ensureSymlink /vagrant/vagrant-data/vhosts/myeasyweb.conf /etc/apache2/sites-enabled/myeasyweb.conf
 	
 	# Restart services
 	/etc/init.d/apache2 restart

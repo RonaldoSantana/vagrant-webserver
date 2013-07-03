@@ -27,8 +27,7 @@ Vagrant::Config.run do |config|
   # config.vm.boot_mode = :gui
 
   # Host name
-  config.vm.host_name = "projects-box"
-
+  config.vm.host_name = "webserver.domain.com"
 
   # Assign this VM to a host-only network IP, allowing you to access it
   # via the IP. Host-only networks can talk to the host machine as well as
@@ -56,7 +55,9 @@ Vagrant::Config.run do |config|
   # folder, and the third is the path on the host to the actual folder.
   # config.vm.share_folder "v-data", "/vagrant_data", "../data"
   # setting to nfs is the easiest way to grant write permission, etc - but will require host password
-  config.vm.share_folder("v-root", "/vagrant", ".", :nfs => true)
+  # config.vm.share_folder("vagrant-root", "/vagrant", ".", :nfs => true)
+  # for windows - for linux or mac comment the below and uncomment abobe
+  config.vm.share_folder("vagrant-root", "/vagrant", ".")
 
   # Enable shell provisioning
   config.vm.provision :shell, :path => "vagrant-data/provision.sh"  
