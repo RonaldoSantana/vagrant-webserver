@@ -48,7 +48,10 @@ then
 	sudo easy_install markdown
 
 	#curl
-	sudo apt-get install curl
+	sudo apt-get -y install php5-curl
+
+	#gd
+	sudo apt-get -y install php5-gd
 
 	#composer
 	curl -sS https://getcomposer.org/installer | php
@@ -65,7 +68,7 @@ then
 	echo "extension=http.so" > /etc/php5/conf.d/http.ini
 
     # set server name
-	echo "ServerName server.local" > /etc/apache2/httpd.conf
+	echo "ServerName webserver.domain.com" > /etc/apache2/httpd.conf
 
 	# Enable mod_rewrite	
 	a2enmod rewrite
@@ -94,7 +97,7 @@ fi
 
 # fixes pear problem
 sudo mv /usr/share/php/.channels /usr/share/php/.channels.bak
-pear update-channels
+sudo pear update-channels
 
 # composer
 sudo rm -rf /usr/local/bin/composer
